@@ -15,6 +15,7 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import SortDropdown, { SortOption } from '@/components/SortDropdown';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 interface Task {
   id: string;
@@ -318,10 +319,12 @@ const HomeScreen: React.FC = () => {
         <Text style={[styles.subHeader, { color: colors.secondaryText }]}>Kelola tugas harian Anda dengan efisien</Text>
         <View style={styles.statsContainer}>
           <View style={[styles.statBox, { backgroundColor: colors.card }]}>
+            <FontAwesome6 name="check" style={[styles.statIcon, {color: colors.tint}]} />
             <Text style={[styles.statLabel, { color: colors.secondaryText }]}>Total</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>{stats.total}</Text>
           </View>
           <View style={[styles.statBox, { backgroundColor: colors.card }]}>
+            <FontAwesome6 name="check" style={[styles.statIcon, {color: colors.tint}]} />
             <Text style={[styles.statLabel, { color: colors.secondaryText }]}>Selesai</Text>
             <Text style={[styles.statValueSelesai, { color: '#28a745' }]}>{stats.completed}</Text>
           </View>
@@ -507,6 +510,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
+  statIcon: {
+    fontSize: 20,
+    marginBottom: 8,
+  }, 
 });
 
 export default HomeScreen;

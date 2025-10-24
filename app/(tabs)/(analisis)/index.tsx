@@ -10,6 +10,7 @@ import {
 import { BarChart } from 'react-native-chart-kit';
 import { Colors } from '@/constants/theme';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 
 const screenWidth = Dimensions.get('window').width;
@@ -61,12 +62,12 @@ const AnalysisScreen: React.FC = () => {
   };
 
   const barChartData = {
-    labels: ['Sel', 'Rab', 'kam', 'Jum', 'Sab', 'Min', 'Sen'],
+    labels: ['Sen', 'Sel', 'Rab', 'kam', 'Jum', 'Sab', 'Min'],
     datasets: [
       {
         data: [5, 4, 3, 5, 6, 7, 9],
         colors: [
-          () => "red",
+          () => "#dc3545",
           () => colors.tint,
           () => colors.tint,
           () => colors.tint,
@@ -92,22 +93,22 @@ const AnalysisScreen: React.FC = () => {
         {/* Stats Cards */}
         <View style={styles.statsContainer}>
             <View style={[styles.statCard, styles.totalCompletedCard]}>
-            <Text style={[styles.statIcon, { color: colors.tint }]}>⭕</Text>
+            <FontAwesome6 name='check' color="green" size={20} style={[styles.statIcon, { color: colors.tint }]}/>
             <Text style={[styles.statLabel, { color: colors.text }]}>Total Selesai</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>{mockStats.totalCompleted}</Text>
             </View>
             <View style={[styles.statCard, styles.efficiencyCard]}>
-            <Text style={[styles.statIcon, { color: '#28a745' }]}>📈</Text>
+            <FontAwesome6 name='chart-simple' color="green" size={20} style={[styles.statIcon, {color : "#28a745"}]}/>
             <Text style={[styles.statLabel, { color: colors.text }]}>Efisiensi Total</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>{mockStats.totalEfficiency}%</Text>
             </View>
             <View style={[styles.statCard, styles.weekCompletedCard]}>
-            <Text style={[styles.statIcon, { color: '#fd7e14' }]}>📅</Text>
+            <FontAwesome6 name='calendar' color="green" size={20} style={[styles.statIcon, {color : "#fd7e14"}]}/>
             <Text style={[styles.statLabel, { color: colors.text }]}>Minggu Ini</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>{mockStats.weekCompleted}</Text>
             </View>
             <View style={[styles.statCard, styles.weekEfficiencyCard]}>
-            <Text style={[styles.statIcon, { color: '#6f42c1' }]}>📊</Text>
+            <FontAwesome6 name='chart-pie' color="green" size={20} style={[styles.statIcon, {color : "#6f42c1"}]}/>
             <Text style={[styles.statLabel, { color: colors.text }]}>Efisiensi Minggu</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>{mockStats.weekEfficiency}%</Text>
             </View>
@@ -117,34 +118,34 @@ const AnalysisScreen: React.FC = () => {
         <View style={[styles.summaryContainer, { backgroundColor: colors.card || colors.background }]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Ringkasan Statistik</Text>
             <View style={styles.summaryRow}>
-            <View style={styles.summaryItem}>
-                <Text style={[styles.summaryLabel, { color: colors.text }]}>Total Tugas</Text>
-                <Text style={[styles.summaryValue, { color: colors.text }]}>{mockStats.totalTasks}</Text>
-            </View>
-            <View style={styles.summaryItem}>
-                <Text style={[styles.summaryLabel, { color: colors.text }]}>Selesai</Text>
-                <Text style={[styles.summaryValue, { color: colors.text }]}>{mockStats.completed}</Text>
-            </View>
-            </View>
-            <View style={styles.summaryRow}>
-            <View style={styles.summaryItem}>
-                <Text style={[styles.summaryLabel, { color: colors.text }]}>Pending</Text>
-                <Text style={[styles.summaryValue, { color: '#dc3545' }]}>{mockStats.pending}</Text>
-            </View>
-            <View style={styles.summaryItem}>
-                <Text style={[styles.summaryLabel, { color: colors.text }]}>Prioritas Tinggi</Text>
-                <Text style={[styles.summaryValue, { color: '#dc3545' }]}>{mockStats.highPriority}</Text>
-            </View>
+              <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryLabel, { color: colors.text }]}>Total Tugas</Text>
+                  <Text style={[styles.summaryValue, { color: colors.text }]}>{mockStats.totalTasks}</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryLabel, { color: colors.text }]}>Selesai</Text>
+                  <Text style={[styles.summaryValue, { color: colors.text }]}>{mockStats.completed}</Text>
+              </View>
             </View>
             <View style={styles.summaryRow}>
-            <View style={styles.summaryItem}>
-                <Text style={[styles.summaryLabel, { color: colors.text }]}>Prioritas Sedang</Text>
-                <Text style={[styles.summaryValue, { color: '#fd7e14' }]}>{mockStats.mediumPriority}</Text>
+              <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryLabel, { color: colors.text }]}>Pending</Text>
+                  <Text style={[styles.summaryValue, { color: '#dc3545' }]}>{mockStats.pending}</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryLabel, { color: colors.text }]}>Prioritas Rendah</Text>
+                  <Text style={[styles.summaryValue, { color: '#28a745' }]}>{mockStats.lowPriority}</Text>
+              </View>
             </View>
-            <View style={styles.summaryItem}>
-                <Text style={[styles.summaryLabel, { color: colors.text }]}>Prioritas Rendah</Text>
-                <Text style={[styles.summaryValue, { color: '#28a745' }]}>{mockStats.lowPriority}</Text>
-            </View>
+            <View style={styles.summaryRow}>
+              <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryLabel, { color: colors.text }]}>Prioritas Sedang</Text>
+                  <Text style={[styles.summaryValue, { color: '#fd7e14' }]}>{mockStats.mediumPriority}</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryLabel, { color: colors.text }]}>Prioritas Tinggi</Text>
+                  <Text style={[styles.summaryValue, { color: '#dc3545' }]}>{mockStats.highPriority}</Text>
+              </View>
             </View>
         </View>
 
@@ -152,20 +153,20 @@ const AnalysisScreen: React.FC = () => {
         <View style={[styles.chartContainer, { backgroundColor: colors.card || colors.background }]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Tugas Selesai Per Hari</Text>
             <BarChart
-            data={barChartData}
-            width={screenWidth - 47}
-            height={230}
-            yAxisLabel=""
-            yAxisSuffix="" // Added to satisfy the required prop
-            chartConfig={chartConfig}
-            verticalLabelRotation={0}
-            showValuesOnTopOfBars={true}
-            showBarTops={false}
-            fromZero
-            withHorizontalLabels={false}
-            withCustomBarColorFromData
-            flatColor
-            style={styles.chart}
+              data={barChartData}
+              width={screenWidth - 47}
+              height={230}
+              yAxisLabel=""
+              yAxisSuffix=""
+              chartConfig={chartConfig}
+              verticalLabelRotation={0}
+              showValuesOnTopOfBars={true}
+              showBarTops={false}
+              fromZero
+              withHorizontalLabels={false}
+              withCustomBarColorFromData
+              flatColor
+              style={styles.chart}
             />
         </View>
 
