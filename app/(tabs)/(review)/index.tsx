@@ -57,7 +57,7 @@ const ReviewScreen: React.FC = () => {
         <View style={styles.summaryRow}>
           <View style={styles.summaryItem}>
             <Text style={[styles.summaryLabel, { color: colors.text }]}>Tugas Selesai</Text>
-            <Text style={[styles.summaryValue, { color: colors.text }]}>{completedTasks.length}</Text>
+            <Text style={[styles.summaryValue, { color:  "#28a745" }]}>{completedTasks.length}</Text>
           </View>
           <View style={styles.summaryItem}>
             <Text style={[styles.summaryLabel, { color: colors.text }]}>Tugas Tertunda</Text>
@@ -67,7 +67,7 @@ const ReviewScreen: React.FC = () => {
         <View style={styles.summaryRow}>
           <View style={styles.summaryItem}>
             <Text style={[styles.summaryLabel, { color: colors.text }]}>Total Tugas</Text>
-            <Text style={[styles.summaryValue, { color: colors.text }]}>{tasks.length}</Text>
+            <Text style={[styles.summaryValue, { color: colors.tint }]}>{tasks.length}</Text>
           </View>
         </View>
       </View>
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 30
   },
   header: {
     fontSize: 24,

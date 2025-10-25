@@ -1,16 +1,15 @@
+import { Colors } from '@/constants/theme';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   Modal,
   Platform,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 interface AddTaskModalProps {
   visible: boolean;
@@ -22,10 +21,54 @@ interface AddTaskModalProps {
     time: Date;
     date: Date
   }) => void;
-  defaultDate?: string; // Optional default date for task
+  isPreset :  boolean;
 }
 
-const AddTaskModal: React.FC<AddTaskModalProps> = ({ visible, onClose, onAdd, defaultDate }) => {
+export interface SortOption {
+  id: string;
+  label: string;
+  value: 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
+}
+
+const sortOptions: SortOption[] = [
+  {
+    id: '1',
+    label: 'Senin',
+    value: 'senin',
+  },
+  {
+    id: '2',
+    label: 'Selasa',
+    value: 'selasa',
+  },
+  {
+    id: '3',
+    label: 'Rabu',
+    value: 'rabu',
+  },
+  {
+    id: '4',
+    label: 'Kamis',
+    value: 'kamis',
+  },
+  {
+    id: '5',
+    label: 'Jumat',
+    value: 'jumat',
+  },
+  {
+    id: '6',
+    label: 'Sabtu',
+    value: 'sabtu',
+  },
+  {
+    id: '7',
+    label: 'Minggu',
+    value: 'minggu',
+  },
+];
+
+const AddTaskModal: React.FC<AddTaskModalProps> = ({ visible, onClose, onAdd, isPreset}) => {
   const colorScheme = 'dark';
   const colors = Colors[colorScheme];
 
@@ -35,6 +78,9 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ visible, onClose, onAdd, de
   const [newTime, setNewTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedDay, setSelectedDay] = useState<'Hari Ini' | 'Besok'>('Hari Ini');
+  const [isOpen, setIsOpen] = useState(false);
+  const [daySelectedLabel, setDaySelectedLabel] = useState("Senin");
+
 
   const handleDayToggle = (day: 'Hari Ini' | 'Besok') => {
     setSelectedDay(day);
@@ -52,6 +98,8 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ visible, onClose, onAdd, de
     updatedDate.setHours(currentHours, currentMinutes, 0, 0);
     setNewTime(updatedDate);
   };
+
+  
 
   const addTask = () => {
     if (!newTitle.trim()) return;
@@ -114,20 +162,59 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ visible, onClose, onAdd, de
           <View style={styles.row}>
             <Text style={[styles.label, { color: colors.secondaryText }]}>Waktu:</Text>
             <View style={styles.dayTimeContainer}>
-              <View style={styles.dayToggle}>
-                <TouchableOpacity
-                  style={[styles.dayButton, selectedDay === 'Hari Ini' && styles.activeDayButton]}
-                  onPress={() => handleDayToggle('Hari Ini')}
-                >
-                  <Text style={[styles.dayText, selectedDay === 'Hari Ini' && styles.activeDayText]}>Hari Ini</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.dayButton, selectedDay === 'Besok' && styles.activeDayButton]}
-                  onPress={() => handleDayToggle('Besok')}
-                >
-                  <Text style={[styles.dayText, selectedDay === 'Besok' && styles.activeDayText]}>Besok</Text>
-                </TouchableOpacity>
-              </View>
+              {isPreset == false ? (
+                <View style={styles.dayToggle}>
+                  <TouchableOpacity
+                    style={[styles.dayButton, selectedDay === 'Hari Ini' && styles.activeDayButton]}
+                    onPress={() => handleDayToggle('Hari Ini')}
+                  >
+                    <Text style={[styles.dayText, selectedDay === 'Hari Ini' && styles.activeDayText]}>Hari Ini</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.dayButton, selectedDay === 'Besok' && styles.activeDayButton]}
+                    onPress={() => handleDayToggle('Besok')}
+                  >
+                    <Text style={[styles.dayText, selectedDay === 'Besok' && styles.activeDayText]}>Besok</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View>
+                  <TouchableOpacity
+                    style={[styles.daySelection, styles.selected]}
+                    onPress={() => {
+                      setIsOpen(!isOpen);
+                    }}
+                  >
+                    <Text style={[styles.daySelectionText]}>{daySelectedLabel}</Text>
+                  </TouchableOpacity>
+                  {isOpen == true ? (
+                    <View style={[styles.dropdown, { backgroundColor: colors.card }]}>
+                      {sortOptions.map((option) => (
+                        <TouchableOpacity
+                          key={option.id}
+                          style={[
+                            styles.dropdownItem,
+                            option.label === daySelectedLabel && styles.activeItem,
+                          ]}
+                          onPress={() => {
+                            setDaySelectedLabel(option.label);
+                            setIsOpen(false);
+                          }}
+                        >
+                          <Text
+                            style={[
+                              styles.dropdownItemText,
+                              option.label === daySelectedLabel && styles.activeItemText,
+                            ]}
+                          >
+                            {option.label}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  ) : (null)}
+                </View>
+              )}
               <TouchableOpacity onPress={() => setShowTimePicker(true)}>
                 <Text style={[styles.timeText, { color: colors.text }]}>
                   {newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -152,7 +239,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ visible, onClose, onAdd, de
               style={[styles.cancelButton, { backgroundColor: colors.card }]}
               onPress={onClose} // Use onClose instead of setModalVisible
             >
-              <Text style={[styles.buttonText, { color: colors.tint }]}>Batal</Text>
+              <Text style={[styles.buttonText, { color: '#dc3545' }]}>Batal</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.addModalButton, { backgroundColor: colors.tint }]}
@@ -278,6 +365,48 @@ const styles = StyleSheet.create({
   activeDayText: {
     color: 'white',
   },
+  dropdown: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    marginTop: 4,
+    borderRadius: 8,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    paddingBottom: 5,
+    zIndex: 10,
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  activeItem: {
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  activeItemText: {
+    color: '#3b82f6',
+    fontWeight: '600',
+  },
+  daySelection: {
+    paddingVertical: 6,
+    width: 200,
+    borderRadius: 8,
+    backgroundColor: '#007bff',
+    marginRight: 5,
+  },
+  daySelectionText:{
+    color: 'white'
+  } 
 });
 
 export default AddTaskModal;

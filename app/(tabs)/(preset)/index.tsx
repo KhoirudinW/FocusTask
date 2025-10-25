@@ -5,6 +5,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { v4 as uuidv4 } from 'uuid'; // Install uuid: npm install uuid @types/uuid
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
+import AddTaskModal from '@/components/AddTaskModal';
+import SortDropdown, {SortOption} from '@/components/SortDropdown';
 
 
 
@@ -27,6 +29,11 @@ const PresetScreen: React.FC = () => {
   const [newTime, setNewTime] = useState(new Date());
   const [newPriority, setNewPriority] = useState<Preset['priority']>('Sedang');
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [sortOption, setSortOption] = useState<SortOption>({
+    id: '1',
+    label: 'Priority High to Low',
+    value: 'priority-high-low',
+  });
 
   const colorScheme = 'dark';
   const colors = Colors[colorScheme];
@@ -118,7 +125,7 @@ const PresetScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={{display: 'flex', flexDirection:'row', alignItems: 'center', gap: 10}}>
         <IconSymbol name='calendar.fill' size={40} color={colors.tint}/>
         <Text style={styles.header}>Preset Tugas</Text>
@@ -139,6 +146,7 @@ const PresetScreen: React.FC = () => {
           <Text style={styles.addButtonText}>+ Tambah Preset</Text>
         </TouchableOpacity>
       </View>
+      <SortDropdown selectedOption={sortOption} onOptionSelect={setSortOption}/>
       {presets.length === 0 ? (
         <View style={styles.noPresetsContainer}>
           <IconSymbol name='calendar.fill' size={60} color={"gray"}></IconSymbol>
@@ -155,90 +163,8 @@ const PresetScreen: React.FC = () => {
           contentContainerStyle={styles.presetList}
         />
       )}
-      <Modal visible={modalVisible} animationType="slide" transparent>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Tambah Preset Baru</Text>
-            <Text style={styles.modalSubtitle}>
-              Buat preset tugas yang akan muncul otomatis
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="gray"
-              placeholder="Contoh: Olahraga pagi"
-              value={newTitle}
-              onChangeText={setNewTitle}
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="gray"
-              placeholder="Deskripsi singkat..."
-              value={newDescription}
-              onChangeText={setNewDescription}
-              multiline
-            />
-            <View style={styles.row}>
-              <Text style={styles.label}>Hari</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={newDay}
-                  onValueChange={(itemValue) => setNewDay(itemValue as Preset['day'])}
-                  style={styles.picker}
-                  dropdownIconColor="white"
-                >
-                  <Picker.Item label="Senin" value="Senin" />
-                  <Picker.Item label="Selasa" value="Selasa" />
-                  <Picker.Item label="Rabu" value="Rabu" />
-                  <Picker.Item label="Kamis" value="Kamis" />
-                  <Picker.Item label="Jumat" value="Jumat" />
-                  <Picker.Item label="Sabtu" value="Sabtu" />
-                  <Picker.Item label="Minggu" value="Minggu" />
-                </Picker>
-              </View>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Waktu</Text>
-              <TouchableOpacity onPress={() => setShowTimePicker(true)}>
-                <Text style={styles.timeText}>
-                  {newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {showTimePicker && (
-              <DateTimePicker
-                value={newTime}
-                mode="time"
-                is24Hour
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={(event, selectedDate) => {
-                  setShowTimePicker(Platform.OS === 'ios');
-                  if (selectedDate) setNewTime(selectedDate);
-                }}
-              />
-            )}
-            <View style={styles.row}>
-              <Text style={styles.label}>Prioritas</Text>
-              <TouchableOpacity onPress={() => setNewPriority('Rendah')}>
-                <Text style={newPriority === 'Rendah' ? styles.selected : styles.option}>Rendah</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setNewPriority('Sedang')}>
-                <Text style={newPriority === 'Sedang' ? styles.selected : styles.option}>Sedang</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setNewPriority('Tinggi')}>
-                <Text style={newPriority === 'Tinggi' ? styles.selected : styles.option}>Tinggi</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
-                <Text>Batal</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.addModalButton} onPress={addPreset}>
-                <Text style={styles.addModalButtonText}>Tambah</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <AddTaskModal visible={modalVisible} onClose={() => setModalVisible(false)} onAdd={addPreset} isPreset={true}/>
+    
     </View>
   );
 };
@@ -246,8 +172,9 @@ const PresetScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1e1e2f',
     padding: 16,
+    paddingTop: 30
+
   },
   header: {
     fontSize: 24,

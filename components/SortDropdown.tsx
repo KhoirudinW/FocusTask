@@ -14,6 +14,14 @@ export interface SortOption {
   value: 'task-asc' | 'task-desc' | 'date-near' | 'date-far' | 'priority-low-high' | 'priority-high-low';
 }
 
+export interface SortDayOption {
+  
+  id: string;
+  label: string;
+  value: 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
+  
+}
+
 interface SortDropdownProps {
   selectedOption: SortOption;
   onOptionSelect: (option: SortOption) => void;
@@ -57,13 +65,52 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ selectedOption, onOptionSel
     },
   ];
 
+  const sortDayOptions: SortDayOption[] = [
+    {
+      id: '1',
+      label: 'Senin',
+      value: 'senin',
+    },
+    {
+      id: '2',
+      label: 'Selasa',
+      value: 'selasa',
+    },
+    {
+      id: '3',
+      label: 'Rabu',
+      value: 'rabu',
+    },
+    {
+      id: '4',
+      label: 'Kamis',
+      value: 'kamis',
+    },
+    {
+      id: '5',
+      label: 'Jumat',
+      value: 'jumat',
+    },
+    {
+      id: '6',
+      label: 'Sabtu',
+      value: 'sabtu',
+    },
+    {
+      id: '7',
+      label: 'Minggu',
+      value: 'minggu',
+    },
+  ];
+  
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.trigger, { backgroundColor: colors.tint }]}
         onPress={() => setIsOpen(!isOpen)}
       >
-        <Text style={[styles.triggerText, { color: colors.text }]}>Sort by ▼</Text>
+        <Text style={[styles.triggerText, { color: colors.text }]}>{selectedOption == null ? "Sort by ▼" : selectedOption.label + "▼"}</Text>
       </TouchableOpacity>
       
       {isOpen && (
